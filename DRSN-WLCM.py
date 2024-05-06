@@ -3,7 +3,6 @@ import numpy as np
 import pandas
 import tensorflow as tf
 import matplotlib.pyplot as plt
-from keras.datasets import mnist
 from keras.layers import Dense, Conv2D, BatchNormalization, Activation, Dropout
 from keras.layers import AveragePooling2D, Input, GlobalAveragePooling2D
 from keras.optimizers import Adam, SGD
@@ -24,10 +23,21 @@ K.set_learning_phase(1)
 np.random.seed(42)
 
 data = pandas.read_excel("essay_input2.xlsx")
+
+#Curve morphological feature extraction
+def add_derivative(df, logs):
+    
+    for col in logs:
+        df[f'Derivative of {col}'] = np.gradient(df[col], df['#Depth'])
+
+    # NaN to 0
+    df.fillna(0, inplace=True)
+    
+    return df
+
+data = add_derivative(data, ["AC"])
+
 values = data.values
-
-
-XY = values
 X = XY[:, ["GR", "RD", "RS", "CNC", "AC", "Derivative of AC"]]
 
 scaler = MinMaxScaler(feature_range=(0,1))
