@@ -144,15 +144,15 @@ def residual_shrinkage_block(incoming, nb_blocks, out_channels, downsample=False
 
 # define and train a model
 inputs = Input(shape=input_shape)
-net = Conv2D(128, 3, padding='same', kernel_initializer='he_normal',kernel_regularizer=l2(1e-4))(inputs)
-net = BatchNormalization()(net)
-net = Conv2D(64, 1, padding='same', kernel_initializer='he_normal',kernel_regularizer=l2(1e-4))(net)
-net = residual_shrinkage_block(net, 1, 64, downsample=True)
+net = Conv2D(16, 3, padding='same', kernel_initializer='he_normal',kernel_regularizer=l2(1e-4))(inputs)
+
+net = residual_shrinkage_block(net, 1, 32, downsample=True)
+net = residual_shrinkage_block(net, 1, 32)
 net = BatchNormalization()(net)
 net = Activation('relu')(net)
 
 net = GlobalAveragePooling2D()(net)
-net = BatchNormalization()(net)
+
 outputs = Dense(7,activation='softmax', kernel_initializer='he_normal',kernel_regularizer=l2(1e-4))(net)
 
 METRICS = [
