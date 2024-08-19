@@ -97,7 +97,7 @@ def residual_shrinkage_block(incoming, nb_blocks, out_channels, downsample=False
         
         residual = BatchNormalization()(residual)
         residual = Activation('relu')(residual)
-        residual = Conv2D(out_channels, kernel_size=(1,1), strides=(downsample_strides, downsample_strides), 
+        residual = Conv2D(out_channels, kernel_size=(3,3), strides=(downsample_strides, downsample_strides), 
                           padding='same', kernel_initializer='he_normal',
                           kernel_regularizer=l2(1e-4))(residual)
     
