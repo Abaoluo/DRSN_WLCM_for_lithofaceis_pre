@@ -75,7 +75,7 @@ def sign_backend(inputs):
 def pad_backend(inputs, in_channels, out_channels):
     pad_dim = (out_channels - in_channels)//2
     inputs = K.expand_dims(inputs,-1)
-    inputs = K.spatial_3d_padding(inputs, ((0,0),(0,0),(0,0)), 'channels_last')
+    inputs = K.spatial_3d_padding(inputs, ((0,0),(0,0),(pad_dim, pad_dim)), 'channels_last')
     return K.squeeze(inputs, -1)
 
 def scorer_f(estimator, X):   #your own scorer
@@ -145,7 +145,7 @@ def residual_shrinkage_block(incoming, nb_blocks, out_channels, downsample=False
 # define and train a model
 inputs = Input(shape=input_shape)
 net = Conv2D(16, 3, padding='same', kernel_initializer='he_normal',kernel_regularizer=l2(1e-4))(inputs)
-
+net = residual_shrinkage_block(net, 1, 16)
 net = residual_shrinkage_block(net, 1, 32, downsample=True)
 net = residual_shrinkage_block(net, 1, 32)
 net = BatchNormalization()(net)
